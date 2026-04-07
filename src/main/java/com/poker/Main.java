@@ -28,10 +28,25 @@ public class Main {
             }
         }
 
-        // 5. Print the results
+        // 5. Evaluate and Print the results
+        Player winner = null;
+        HandRank bestRank = null;
+
         System.out.println("--- Poker Round Results ---");
         for (Player p : players) {
-            System.out.println(p);
+            // Sort hand before printing so it's easier to read
+            p.getHand().sort(java.util.Comparator.comparingInt(c -> c.getRank().getValue()));
+            
+            HandRank result = HandEvaluator.evaluate(p.getHand());
+            System.out.println(p.getName() + "'s hand: " + p.getHand() + " -> " + result);
+
+            // Winner Logic
+            if (bestRank == null || result.getValue() > bestRank.getValue()) {
+                bestRank = result;
+                winner = p;
+            }
         }
+
+        System.out.println("\n🏆 THE WINNER IS: " + winner.getName() + " with a " + bestRank + "!");
     }
 }
